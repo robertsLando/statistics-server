@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    env_file: ./postgres.env
+    volumes:
+       - postgres-data:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  cube:
+    image: cubejs/cube:v0.26.60
+    ports:
+      # It's better to use random port binding for 4000/3000 ports
+      # without it you will not able to start multiple projects inside docker
+      # - 4000
+      # - 3000
+      # 4000 is a port for Cube.js API
+      - 4000:4000
+      # 3000 is a port for Playground web-server
+      - 3000:3000
+    env_file: ./cubejs/cubejs.env
+    volumes:
+      - ./cubejs:/cube/conf
+      # We ignore Cube.js deps, because they are built-in inside the official Docker image
+      - ./cubejs/.empty:/cube/conf/node_modules/@cubejs-backend/
+
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/root/.pgadmin
+
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+  node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red:/data
+    restart: unless-stopped
+volumes:
+  postgres-data:
+  pgadmin:
+  
