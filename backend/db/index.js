@@ -66,6 +66,12 @@ const tables = {
           Constraints.NOT_NULL
         ]
       },
+      applicationName: {
+        datatype: DataTypes.varchar(10)
+      },
+      applicationVersion: {
+        datatype: DataTypes.varchar(10)
+      },
       lastUpdate: {
         datatype: DataTypes.timestampz,
         constraints: [
