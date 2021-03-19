@@ -6,27 +6,15 @@ services:
     image: postgres
     env_file: ./postgres.env
     volumes:
-       - postgres-data:/data/postgres
+      - postgres-data:/data/postgres
     ports:
       - "5432:5432"
     restart: unless-stopped
-  cube:
-    image: cubejs/cube:v0.26.60
+  apis:
+    build: ./backend
+    container_name: apis_container
     ports:
-      # It's better to use random port binding for 4000/3000 ports
-      # without it you will not able to start multiple projects inside docker
-      # - 4000
-      # - 3000
-      # 4000 is a port for Cube.js API
-      - 4000:4000
-      # 3000 is a port for Playground web-server
-      - 3000:3000
-    env_file: ./cubejs/cubejs.env
-    volumes:
-      - ./cubejs:/cube/conf
-      # We ignore Cube.js deps, because they are built-in inside the official Docker image
-      - ./cubejs/.empty:/cube/conf/node_modules/@cubejs-backend/
-
+      - 5000:5000 # apis port
     restart: unless-stopped
   pgadmin:
     container_name: pgadmin_container
@@ -34,13 +22,23 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
-       - pgadmin:/root/.pgadmin
+      - pgadmin:/root/.pgadmin
 
     ports:
       - "5050:80"
     restart: unless-stopped
+  grafana:
+    image: grafana/grafana:5.1.0
+    container_name: grafana_container
+    volumes:
+      - ./grafana/etc:/etc/grafana
+      - grafana-lib:/var/lib/grafana
+      - grafana-log:/var/log/grafana
+    ports:
+      - 4000:3000
+    env_file: ./grafana/grafana.env
   node-red:
     image: nodered/node-red:latest
     environment:
@@ -53,4 +51,5 @@ services:
 volumes:
   postgres-data:
   pgadmin:
-  
+  grafana-lib:
+  grafana-log:
