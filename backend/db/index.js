@@ -110,6 +110,9 @@ const tables = {
           Constraints.NOT_NULL
         ]
       },
+      firmwareVersion: {
+        datatype: DataTypes.varchar(10)
+      },
       created: {
         datatype: DataTypes.timestampz,
         constraints: [
