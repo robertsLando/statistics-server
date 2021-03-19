@@ -177,7 +177,5 @@ module.exports = {
     await pool.query(query)
   }
 }
-// module.exports.dropAll()
-// module.exports.init()
-module.exports.upsert('Network', [{ homeId: 'fsedfsfgrr', zjsVersion: '7.0.0', lastUpdate: new Date().toISOString() }]).catch(console.log)
+// module.exports.upsert('Network', [{ homeId: 'fsedfsfgrr', zjsVersion: '7.0.0', lastUpdate: new Date().toISOString() }]).catch(console.log)
 // module.exports.upsert('Device', [{ network: 'fsedfsfgrr', nodeId: 10, manufacturer: '0x0000', prodType: '0x0000', prodId: '0x0000' }]).catch(console.log)

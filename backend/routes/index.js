@@ -3,8 +3,6 @@ const db = require('../db')
 
 const router = express.Router()
 
-db.init()
-
 /* GET home page. */
 router.post('/metrics', async (req, res) => {
   try {
