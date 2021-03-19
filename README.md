@@ -17,5 +17,5 @@ docker-compose up
 
 ## Credentials
 
-Postgres: admin postgres
-Grafana: admin admin
+- Postgres: admin postgres
+- Grafana: admin admin
