@@ -2,7 +2,6 @@ const express = require('express')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-
 const index = require('./routes/index')
 
 const app = express()
@@ -32,5 +31,17 @@ app.use((err, req, res) => {
   res.status(err.status || 500)
   res.render('error')
 })
+
+process.removeAllListeners('SIGINT')
+
+async function gracefuShutdown () {
+  console.log('Shutdown detected. Clean up stuff...')
+  // TODO: close database
+  return process.exit()
+}
+
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.once(signal, gracefuShutdown)
+}
 
 module.exports = app
