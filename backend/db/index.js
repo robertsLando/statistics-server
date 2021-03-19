@@ -67,7 +67,7 @@ const tables = {
         ]
       },
       applicationName: {
-        datatype: DataTypes.varchar(10)
+        datatype: DataTypes.varchar(50)
       },
       applicationVersion: {
         datatype: DataTypes.varchar(10)
