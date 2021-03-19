@@ -34,8 +34,8 @@ services:
     container_name: grafana_container
     volumes:
       - ./grafana/etc:/etc/grafana
-      - grafana-lib:/var/lib/grafana
-      - grafana-log:/var/log/grafana
+      - ./grafana/lib:/var/lib/grafana
+      - ./grafana/log:/var/log/grafana
     ports:
       - 4000:3000
     env_file: ./grafana/grafana.env
@@ -51,5 +51,3 @@ services:
 volumes:
   postgres-data:
   pgadmin:
-  grafana-lib:
-  grafana-log:
