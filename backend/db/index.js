@@ -43,7 +43,7 @@ module.exports = {
       for (const k in findQuery) {
         findQuery[k] = doc[k]
       }
-      bulk.find(findQuery).upsert().updateOne(doc)
+      bulk.find(findQuery).upsert().updateOne({ $set: doc })
     }
 
     await bulk.execute()
@@ -54,11 +54,8 @@ module.exports = {
     await client.db('admin').command({ ping: 1 })
     const db = client.db(options.db)
     for (const c in collections) {
-      let collection = await db.collection(c)
-      if (!collection) {
-        collection = await client.db(options.db).createCollection(c)
-        await collection.createIndex(...collections[c].index)
-      }
+      const collection = await db.collection(c)
+      await collection.createIndex(...collections[c].index)
     }
     console.log('MongoDB client connected successfully to server')
   },
