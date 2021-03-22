@@ -25,12 +25,12 @@ services:
         - PASSWORD=mongodb
     image: charts
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     environment:
       CHARTS_SUPPORT_WIDGET_AND_METRICS: 'on'
       SSL_CERT_DIR: /mongodb-charts/volumes/db-certs
-      CHARTS_MONGODB_URI: 'mongodb://mongodb:27017/metrics?poolSize=20&writeConcern=majority'
+      CHARTS_MONGODB_URI: 'mongodb://mongodb:27017'
     volumes:
       - keys:/mongodb-charts/volumes/keys
       - logs:/mongodb-charts/volumes/logs
