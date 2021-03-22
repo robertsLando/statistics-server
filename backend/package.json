@@ -11,6 +11,7 @@
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "express": "~4.15.5",
+    "got": "^11.8.2",
     "mongodb": "^3.6.5",
     "morgan": "~1.9.0"
   },
