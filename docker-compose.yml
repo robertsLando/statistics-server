@@ -17,16 +17,26 @@ services:
     ports:
       - 5000:5000 # apis port
     restart: unless-stopped
-  grafana:
-    image: grafana/grafana:5.1.0
-    container_name: grafana_container
-    volumes:
-      - ./grafana/etc:/etc/grafana
-      - ./grafana/lib:/var/lib/grafana
-      - ./grafana/log:/var/log/grafana
+  charts:
+    build:
+      context: 'mongodb-charts/'
+      args:
+        - EMAIL=admin@example.com
+        - PASSWORD=mongodb
+    image: charts
     ports:
-      - 8080:3000
-    env_file: ./grafana/grafana.env
+      - 80:80
+      - 443:443
+    environment:
+      CHARTS_SUPPORT_WIDGET_AND_METRICS: 'on'
+      SSL_CERT_DIR: /mongodb-charts/volumes/db-certs
+      CHARTS_MONGODB_URI: 'mongodb://mongodb:27017/metrics?poolSize=20&writeConcern=majority'
+    volumes:
+      - keys:/mongodb-charts/volumes/keys
+      - logs:/mongodb-charts/volumes/logs
+      - db-certs:/mongodb-charts/volumes/db-certs
+      - web-certs:/mongodb-charts/volumes/web-certs
+    container_name: charts_container
     depends_on: 
       - mongodb
   node-red:
@@ -41,3 +51,7 @@ services:
     restart: unless-stopped
 volumes:
   mongodb-data:
+  keys:
+  logs:
+  db-certs:
+  web-certs:
