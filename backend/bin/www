@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 
-const debug = require('debug')('backend:server')
 const http = require('http')
 
 const db = require('../db')
@@ -71,11 +70,9 @@ db.init().then(() => {
       case 'EACCES':
         console.error(`${bind} requires elevated privileges`)
         process.exit(1)
-        break
       case 'EADDRINUSE':
         console.error(`${bind} is already in use`)
         process.exit(1)
-        break
       default:
         throw error
     }
@@ -90,7 +87,7 @@ db.init().then(() => {
     const bind = typeof addr === 'string'
       ? `pipe ${addr}`
       : `port ${addr.port}`
-    debug(`Listening on ${bind}`)
+    console.log(`Listening on ${bind}`)
   }
 }).catch(err => {
   console.error(err)

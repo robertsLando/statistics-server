@@ -6,8 +6,8 @@ const router = express.Router()
 /* GET home page. */
 router.post('/metrics', async (req, res) => {
   try {
-    const { table, data } = req.body
-    const result = await db.upsert(table, data)
+    const { collection, data } = req.body
+    const result = await db.upsert(collection, data)
     res.json({ success: true, result })
   } catch (error) {
     res.json({ success: false, error })

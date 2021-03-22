@@ -10,10 +10,9 @@
   "dependencies": {
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
     "express": "~4.15.5",
-    "morgan": "~1.9.0",
-    "pg": "^8.5.1"
+    "mongodb": "^3.6.5",
+    "morgan": "~1.9.0"
   },
   "devDependencies": {
     "eslint": "^7.22.0",

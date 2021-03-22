@@ -1,33 +1,21 @@
 version: "3.7"
 
 services:
-  postgres:
-    container_name: postgres_container
-    image: postgres
-    env_file: ./postgres.env
+  mongodb:
+    image : mongo
+    container_name: mongodb_container
     volumes:
-      - postgres-data:/data/postgres
+    - mongodb-data:/data/db
     ports:
-      - "5432:5432"
+    - 27017:27017
     restart: unless-stopped
   apis:
     build: ./backend
     container_name: apis_container
+    environment:
+      - MONGO_HOST=mongodb
     ports:
       - 5000:5000 # apis port
-    restart: unless-stopped
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin:/root/.pgadmin
-
-    ports:
-      - "5050:80"
     restart: unless-stopped
   grafana:
     image: grafana/grafana:5.1.0
@@ -37,10 +25,13 @@ services:
       - ./grafana/lib:/var/lib/grafana
       - ./grafana/log:/var/log/grafana
     ports:
-      - 4000:3000
+      - 8080:3000
     env_file: ./grafana/grafana.env
+    depends_on: 
+      - mongodb
   node-red:
     image: nodered/node-red:latest
+    container_name: nodered_container
     environment:
       - TZ=Europe/Amsterdam
     ports:
@@ -49,5 +40,4 @@ services:
       - ./node-red:/data
     restart: unless-stopped
 volumes:
-  postgres-data:
-  pgadmin:
+  mongodb-data:
