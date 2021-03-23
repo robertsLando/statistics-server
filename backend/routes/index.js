@@ -1,6 +1,6 @@
 const express = require('express')
 const db = require('../db')
-const got = require('got')
+const { ConfigManager } = require('@zwave-js/config')
 
 const router = express.Router()
 
@@ -17,18 +17,47 @@ router.post('/metrics', async (req, res) => {
 
 router.post('/update-db', async (req, res) => {
   try {
-    const response = await got('https://raw.githubusercontent.com/zwave-js/node-zwave-js/master/packages/config/config/manufacturers.json').json()
+    const manager = new ConfigManager()
 
-    const manufacturers = Object.keys(response).map(h => {
-      return {
-        hex: h,
-        name: response[h]
+    await manager.loadFulltextDeviceIndex()
+
+    // https://zwave-js.github.io/node-zwave-js/#/api/config-manager?id=getfulltextindex
+    const deviceIndex = manager.getFulltextIndex()
+
+    const mIDs = {}
+    const pIDs = {}
+
+    for (const device of deviceIndex) {
+      if (!mIDs[device.manufacturerId]) {
+        mIDs[device.manufacturerId] = {
+          hex: device.manufacturerId,
+          name: device.manufacturer
+        }
       }
-    })
 
-    const result = await db.upsert('manufacturer', manufacturers)
+      const id = `${device.manufacturerId}-${device.productId}`
 
-    res.json({ success: true, result })
+      if (!pIDs[id]) {
+        pIDs[id] = {
+          hex: device.productId,
+          name: device.label,
+          manufacturer: device.manufacturerId,
+          type: device.productType,
+          description: device.description
+        }
+      }
+    }
+
+    const manufacturers = Object.keys(mIDs).map(m => mIDs[m])
+    const products = Object.keys(pIDs).map(p => pIDs[p])
+
+    await db.drop('manufacturer')
+    await db.drop('product')
+
+    await db.upsert('manufacturer', manufacturers)
+    await db.upsert('product', products)
+
+    res.json({ success: true, result: 'done' })
   } catch (error) {
     res.json({ success: false, error })
   }

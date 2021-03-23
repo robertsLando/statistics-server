@@ -26,6 +26,9 @@ const collections = {
   },
   manufacturer: {
     index: [{ hex: 1 }, { unique: true }]
+  },
+  product: {
+    index: [{ hex: 1, manufacturer: 1 }, { unique: true }]
   }
 }
 
@@ -48,8 +51,10 @@ module.exports = {
 
     await bulk.execute()
   },
+  drop: async (collection) => {
+    return client.db(options.db).dropCollection(collection)
+  },
   init: async () => {
-    console.log(uri)
     await client.connect()
     await client.db('admin').command({ ping: 1 })
     const db = client.db(options.db)
