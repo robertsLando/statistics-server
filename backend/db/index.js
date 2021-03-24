@@ -45,6 +45,7 @@ module.exports = {
     for (const doc of data) {
       for (const k in findQuery) {
         findQuery[k] = doc[k]
+        delete doc[k] // remove unique properties from the $set to prevent duplicat key error
       }
       bulk.find(findQuery).upsert().updateOne({ $set: doc })
     }
