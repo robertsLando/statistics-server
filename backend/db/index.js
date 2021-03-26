@@ -7,6 +7,9 @@ const options = {
   username: process.env.MONGO_USER,
   password: process.env.MONGO_PSW
 }
+
+const defaultCollection = 'metric'
+
 // Connection URI
 const uri =
   `mongodb://${options.host}:${options.port}/?poolSize=20&writeConcern=majority`
@@ -18,12 +21,10 @@ const client = new MongoClient(uri, {
 })
 
 const collections = {
-  network: {
-    index: [{ homeId: 1 }, { unique: true }]
+  metric: {
+    index: [{ id: 1 }, { unique: true }]
   },
-  device: {
-    index: [{ network: 1, nodeId: 1 }, { unique: true }]
-  },
+  // add below custom collections if any
   manufacturer: {
     index: [{ hex: 1 }, { unique: true }]
   },
@@ -33,10 +34,7 @@ const collections = {
 }
 
 module.exports = {
-  upsert: async (collection, data) => {
-    if (!collections[collection]) {
-      throw Error(`Collection ${collection} doesn't exists`)
-    }
+  upsert: async ({ collection = defaultCollection, data }) => {
     const bulk = client.db(options.db).collection(collection).initializeOrderedBulkOp()
     const findQuery = Object.assign({}, collections[collection].index[0]) || {
       _id: null
