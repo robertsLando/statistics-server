@@ -40,10 +40,12 @@ Used to add a metrics to the db. The metrix are added using `upsert`, it means t
 
 ```js
 {
-    "collection": "collectionName",
+    "collection": "collectionName", // optional
     "data": [{...}, {...}, ...] // array of documents to add to the collection
 }
 ```
+
+If no collection name is provided the default collection will be used: `metric`. The default collection has a unique field named `id` that the user can use to uniquely identify an entry in the collection
 
 #### POST `/update-db`
 
