@@ -22,15 +22,15 @@ const client = new MongoClient(uri, {
 
 const collections = {
   metric: {
-    index: [{ id: 1, date: 1 }],
+    index: [{ id: 1, date: 1 }, { unique: true }],
     timeseries: true
   },
   // add below custom collections if any
   manufacturer: {
-    index: [{ hex: 1 }]
+    index: [{ hex: 1 }, { unique: true }]
   },
   product: {
-    index: [{ hex: 1, manufacturer: 1 }]
+    index: [{ hex: 1, manufacturer: 1 }, { unique: true }]
   }
 }
 
@@ -46,9 +46,12 @@ module.exports = {
         findQuery[k] = doc[k]
       }
 
-      if (collection[collection].timeseries) {
+      if (collections[collection].timeseries) {
         // If the collection should be a time series, add the current date
-        doc.date = new Date().toISOString().substr(0, 10)
+        const now = new Date()
+        doc.date = new Date(Date.UTC(
+          now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()
+        ))
       }
 
       bulk.find(findQuery).upsert().updateOne({ $set: doc })
