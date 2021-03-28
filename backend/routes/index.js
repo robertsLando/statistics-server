@@ -53,8 +53,8 @@ router.post('/update-db', async (req, res) => {
     await db.drop('manufacturer')
     await db.drop('product')
 
-    await db.upsert('manufacturer', manufacturers)
-    await db.upsert('product', products)
+    await db.upsert({ collection: 'manufacturer', data: manufacturers, ignoreTime: true })
+    await db.upsert({ collection: 'product', data: products, ignoreTime: true })
 
     res.json({ success: true, result: 'done' })
   } catch (error) {
