@@ -25,7 +25,7 @@ services:
         - PASSWORD=mongodb
     image: charts
     ports:
-      - 8080:80
+      - 9999:80
       - 8443:443
     environment:
       CHARTS_SUPPORT_WIDGET_AND_METRICS: 'on'
