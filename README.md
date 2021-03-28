@@ -41,7 +41,8 @@ Used to add a metrics to the db. The metrix are added using `upsert`, it means t
 ```js
 {
     "collection": "collectionName", // optional
-    "data": [{...}, {...}, ...] // array of documents to add to the collection
+    "data": [{...}, {...}, ...], // array of documents to add to the collection
+    "ignoreTime": false // by default this is false, all docs will get added a `date` field with the actual datetime when the doc is received
 }
 ```
 

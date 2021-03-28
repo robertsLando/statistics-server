@@ -34,7 +34,7 @@ const collections = {
 }
 
 module.exports = {
-  upsert: async ({ collection = defaultCollection, data }) => {
+  upsert: async ({ collection = defaultCollection, data, ignoreTime = false }) => {
     const bulk = client.db(options.db).collection(collection).initializeOrderedBulkOp()
     const findQuery = Object.assign({}, collections[collection].index[0]) || {
       _id: null
@@ -45,6 +45,12 @@ module.exports = {
         findQuery[k] = doc[k]
         delete doc[k] // remove unique properties from the $set to prevent duplicat key error
       }
+
+      // add date
+      if (!ignoreTime && !doc.date) {
+        doc.date = new Date()
+      }
+
       bulk.find(findQuery).upsert().updateOne({ $set: doc })
     }
 
