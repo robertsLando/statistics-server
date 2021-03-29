@@ -10,7 +10,8 @@ router.post('/metrics', async (req, res) => {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
   } catch (error) {
-    res.json({ success: false, error })
+    console.error(error)
+    res.json({ success: false, error: error.toString() })
   }
 })
 
