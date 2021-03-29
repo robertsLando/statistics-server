@@ -21,7 +21,7 @@ module.exports = {
   },
   port: process.env.PORT || '5000',
   rateLimit: {
-    maxRequests: 2,
+    maxRequests: 2, // mind that 1 request needs to be done for auth
     ttl: 60 * 1000
   },
   secret: process.env.SECRET || '>rh^b9\'FcNJa{BL"ZoT)/d@(Yog`AF(}ANV`!_}qPss,EFX}BY~2@]R"&qRs75"',
