@@ -1,11 +1,62 @@
 const express = require('express')
 const db = require('../db')
 const { ConfigManager } = require('@zwave-js/config')
+const { TokenExpiredError, sign, verify } = require('jsonwebtoken')
+const { secret, key } = require('../config/app')
 
 const router = express.Router()
 
+function verifyJWT (token) {
+  return new Promise((resolve, reject) => {
+    verify(token, secret, function (err, decoded) {
+      if (err) reject(err)
+      else resolve(decoded)
+    })
+  })
+}
+
+async function authMiddleware (req, res, next) {
+  let token = req.headers['x-access-token'] || req.headers.authorization // Express headers are auto converted to lowercase
+  if (token && token.startsWith('Bearer ')) {
+    // Remove Bearer from string
+    token = token.slice(7, token.length)
+  }
+
+  // third-party cookies must be allowed in order to work
+  try {
+    if (!token) {
+      throw Error('Invalid token header')
+    }
+    const decoded = await verifyJWT(token)
+
+    if (decoded.ip === req.ip) {
+      next()
+    } else {
+      throw Error('Token not valid')
+    }
+  } catch (error) {
+    res.status(error instanceof TokenExpiredError ? 401 : 403).send(error.message)
+  }
+}
+
+router.post('/auth', async (req, res) => {
+  try {
+    if (req.body && req.body.key === key) {
+      const token = sign({ ip: req.ip }, secret, {
+        expiresIn: '1d'
+      })
+
+      res.json({ success: true, token })
+    } else {
+      throw Error('Authentication failed')
+    }
+  } catch (error) {
+    res.json({ success: false, error })
+  }
+})
+
 /* GET home page. */
-router.post('/metrics', async (req, res) => {
+router.post('/metrics', authMiddleware, async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
@@ -15,7 +66,7 @@ router.post('/metrics', async (req, res) => {
   }
 })
 
-router.post('/update-db', async (req, res) => {
+router.post('/update-db', authMiddleware, async (req, res) => {
   try {
     const manager = new ConfigManager()
 

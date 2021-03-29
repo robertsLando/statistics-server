@@ -1,14 +1,8 @@
 const { MongoClient } = require('mongodb')
-
-const options = {
-  host: process.env.MONGO_HOST || 'localhost',
-  db: 'metrics',
-  port: process.env.MONGO_PORT || 27017,
-  username: process.env.MONGO_USER,
-  password: process.env.MONGO_PSW
-}
+const { db: options } = require('../config/app')
 
 const defaultCollection = 'metric'
+const collections = options.collections
 
 // Connection URI
 const uri =
@@ -20,22 +14,8 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true
 })
 
-const collections = {
-  metric: {
-    index: [{ id: 1, date: 1 }, { unique: true }],
-    timeseries: true
-  },
-  // add below custom collections if any
-  manufacturer: {
-    index: [{ hex: 1 }, { unique: true }]
-  },
-  product: {
-    index: [{ hex: 1, manufacturer: 1 }, { unique: true }]
-  }
-}
-
 module.exports = {
-  upsert: async ({ collection = defaultCollection, data, ignoreTime = false }) => {
+  upsert: async ({ collection = defaultCollection, data }) => {
     const bulk = client.db(options.db).collection(collection).initializeOrderedBulkOp()
     const findQuery = Object.assign({}, collections[collection].index[0]) || {
       _id: null

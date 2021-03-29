@@ -3,8 +3,29 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const index = require('./routes/index')
+const RateLimit = require('express-rate-limit')
+const MongoStore = require('rate-limit-mongo')
+
+const { db, rateLimit } = require('./config/app')
+
+const limiter = new RateLimit({
+  store: new MongoStore({
+    uri: `mongodb://${db.host}:${db.port}/rate_limit?poolSize=20&writeConcern=majority`,
+    expireTimeMs: rateLimit.ttl,
+    errorHandler: function (err) {
+      console.error(err)
+    },
+    user: db.username,
+    password: db.password
+  }),
+  max: rateLimit.maxRequests,
+  windowMs: rateLimit.ttl
+})
 
 const app = express()
+
+app.use(limiter)
+
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'))
