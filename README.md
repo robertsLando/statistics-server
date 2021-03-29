@@ -30,7 +30,7 @@ docker-compose down && docker-compose up --build
 
 ## Backend
 
-Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name and the collections with their unique fields. Unique fields are necessary to identify a document uniquely in the DB. This can be done [here](backend/db/index.js)
+Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name and the collections with their unique fields. Unique fields are necessary to identify a document uniquely in the DB. This can be done [here](backend/config/app.js)
 
 ### APIs
 
