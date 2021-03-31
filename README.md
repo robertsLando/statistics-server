@@ -5,7 +5,7 @@ Full stack that provides all the tools to store and visualize custom metrics usi
 - mongodb
 - node-red: <http://localhost:1880>
 - Backend (for apis): <http://localhost:5000>
-- Mongodb charts: <http://localhost:9999>
+- MongoDB charts: <http://localhost:9999>
 
 ## Install
 
@@ -26,7 +26,14 @@ docker-compose down && docker-compose up --build
 
 ## Credentials
 
-- MongoDB Charts: admin@example.com mongodb
+Set up the MongoDB Charts credentials with:
+```bash
+docker exec -it \
+  $(docker container ls --filter name=charts_ -q) \
+  charts-cli add-user --first-name "<First>" --last-name "<Last>" \
+  --email "<user@example.com>" --password "<Password>" \
+  --role "<UserAdmin|User>"
+```
 
 ## Backend
 
