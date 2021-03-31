@@ -39,16 +39,16 @@ services:
     container_name: charts_container
     depends_on: 
       - mongodb
-  node-red:
-    image: nodered/node-red:latest
-    container_name: nodered_container
-    environment:
-      - TZ=Europe/Amsterdam
-    ports:
-      - "1880:1880"
-    volumes:
-      - ./node-red:/data
-    restart: unless-stopped
+  # node-red:
+  #   image: nodered/node-red:latest
+  #   container_name: nodered_container
+  #   environment:
+  #     - TZ=Europe/Amsterdam
+  #   ports:
+  #     - "1880:1880"
+  #   volumes:
+  #     - ./node-red:/data
+  #   restart: unless-stopped
 volumes:
   mongodb-data:
   keys:
