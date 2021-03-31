@@ -35,6 +35,16 @@ docker exec -it \
   --role "<UserAdmin|User>"
 ```
 
+Example creating a default admin user:
+
+```bash
+docker exec -it \
+  $(docker container ls --filter name=charts_ -q) \
+  charts-cli add-user --first-name "Admin" --last-name "MongoDB" \
+  --email "admin@example.com" --password "mongodb" \
+  --role "UserAdmin"
+```
+
 ## Backend
 
 Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name and the collections with their unique fields. Unique fields are necessary to identify a document uniquely in the DB. This can be done [here](backend/config/app.js)
