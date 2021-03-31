@@ -22,16 +22,16 @@ module.exports = {
     }
 
     for (const doc of data) {
-      for (const k in findQuery) {
-        findQuery[k] = doc[k]
-      }
-
       if (collections[collection].timeseries) {
         // If the collection should be a time series, add the current date
         const now = new Date()
         doc.date = new Date(Date.UTC(
           now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()
         ))
+      }
+
+      for (const k in findQuery) {
+        findQuery[k] = doc[k]
       }
 
       bulk.find(findQuery).upsert().updateOne({ $set: doc })
