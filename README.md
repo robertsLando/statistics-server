@@ -51,19 +51,9 @@ Uses an Express server to provide apis to store metrics to MongoDB. The only thi
 
 ### APIs
 
-#### POST `/auth`
+#### Auth
 
-Used to get a token needed to call other APIs. Expect the a body like:
-
-```json
-{
-    "key": "your-key-here"
-}
-```
-
-If everything is ok will return a JSON with a property `token` with the generated token.
-
-Auth protected routes expect an header `x-access-token` or `authorization` with content `Bearer <your-token-here>`
+Auth protected routes expect an header `x-api-token` with content `<key>` where `key` is the key you have set on config/app.js file.
 
 #### POST `/metrics`
 

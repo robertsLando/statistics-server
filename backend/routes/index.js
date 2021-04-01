@@ -1,22 +1,20 @@
 const express = require('express')
+const Joi = require('joi')
+const validator = require('express-joi-validation').createValidator({})
+
 const db = require('../db')
 const { ConfigManager } = require('@zwave-js/config')
-const { TokenExpiredError, sign, verify } = require('jsonwebtoken')
-const { secret, key } = require('../config/app')
+const { key } = require('../config/app')
 
 const router = express.Router()
 
-function verifyJWT (token) {
-  return new Promise((resolve, reject) => {
-    verify(token, secret, function (err, decoded) {
-      if (err) reject(err)
-      else resolve(decoded)
-    })
-  })
-}
+const bodySchema = Joi.object({
+  collection: Joi.string(),
+  data: Joi.array()
+})
 
 async function authMiddleware (req, res, next) {
-  let token = req.headers['x-access-token'] || req.headers.authorization // Express headers are auto converted to lowercase
+  let token = req.headers['x-api-token']
   if (token && token.startsWith('Bearer ')) {
     // Remove Bearer from string
     token = token.slice(7, token.length)
@@ -27,36 +25,19 @@ async function authMiddleware (req, res, next) {
     if (!token) {
       throw Error('Invalid token header')
     }
-    const decoded = await verifyJWT(token)
 
-    if (decoded.ip === req.ip) {
+    if (token === key) {
       next()
     } else {
       throw Error('Token not valid')
     }
   } catch (error) {
-    res.status(error instanceof TokenExpiredError ? 401 : 403).send(error.message)
+    res.status(error.message === 'Token not valid' ? 403 : 401).send(error.message)
   }
 }
 
-router.post('/auth', async (req, res) => {
-  try {
-    if (req.body && req.body.key === key) {
-      const token = sign({ ip: req.ip }, secret, {
-        expiresIn: '1d'
-      })
-
-      res.json({ success: true, token })
-    } else {
-      throw Error('Authentication failed')
-    }
-  } catch (error) {
-    res.json({ success: false, error })
-  }
-})
-
 /* GET home page. */
-router.post('/metrics', authMiddleware, async (req, res) => {
+router.post('/metrics', authMiddleware, validator.body(bodySchema), async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
