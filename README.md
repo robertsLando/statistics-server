@@ -1,6 +1,6 @@
-# Metrics stack
+# Statistics
 
-Full stack that provides all the tools to store and visualize custom metrics using docker
+Full stack that provides all the tools to store and visualize custom usage statistics using docker
 
 - mongodb
 - node-red: <http://localhost:1880>
@@ -47,7 +47,7 @@ docker exec -it \
 
 ## Backend
 
-Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name, the collections with their unique fields and (optionally) your apis validators. Unique fields are necessary to identify a document uniquely in the DB, validators are required to validate body, headers, query of api requests. This can be done [here](backend/config)
+Uses an Express server to provide apis to store statistics to MongoDB. The only thing that needs to be configured are the database name, the collections with their unique fields and (optionally) your apis validators. Unique fields are necessary to identify a document uniquely in the DB, validators are required to validate body, headers, query of api requests. This can be done [here](backend/config)
 
 ### APIs
 
@@ -55,11 +55,11 @@ Uses an Express server to provide apis to store metrics to MongoDB. The only thi
 
 Auth protected routes expect an header `x-api-token` with content `<key>` where `key` is the key you have set on config/app.js file.
 
-#### POST `/metrics`
+#### POST `/statistics`
 
 **Requires AUTH**
 
-Used to add a metrics to the db. The metrix are added using `upsert`, it means that if the document exists in the db it will be updated, otherwise a new doc will be added. The expected payload is:
+Used to add statistics to the db. The individual docs are added using `upsert`, it means that if the document exists in the db it will be updated, otherwise a new doc will be added. The expected payload is:
 
 ```js
 {
@@ -68,7 +68,7 @@ Used to add a metrics to the db. The metrix are added using `upsert`, it means t
 }
 ```
 
-If no collection name is provided the default collection will be used: `metric`. The default collection has a unique field named `id` that the user can use to uniquely identify an entry in the collection
+If no collection name is provided the default collection will be used: `statistics`. The default collection has a unique field named `id` that the user can use to uniquely identify an entry in the collection
 
 #### POST `/update-db`
 

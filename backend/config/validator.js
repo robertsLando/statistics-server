@@ -18,7 +18,7 @@ const validator = require('express-joi-validation').createValidator({})
 // }
 /** @type {Record<string, Partial<Record<import("express-joi-validation").ContainerTypes, Joi.ObjectSchema>>>} */
 const schemas = {
-  [APIs.metrics]: {
+  [APIs.statistics]: {
     body: Joi.object({
       collection: Joi.string().optional(),
       // data must be an array (between 1 and 10 items) of objects that...

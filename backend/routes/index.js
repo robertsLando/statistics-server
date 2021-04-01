@@ -26,7 +26,7 @@ async function authMiddleware (req, res, next) {
 }
 
 /* GET home page. */
-router.post(APIs.metrics, authMiddleware, ...createValidator(APIs.metrics), async (req, res) => {
+router.post(APIs.statistics, authMiddleware, ...createValidator(APIs.statistics), async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
