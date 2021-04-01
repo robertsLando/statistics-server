@@ -1,12 +1,12 @@
 module.exports = {
   db: {
     host: process.env.MONGO_HOST || 'localhost',
-    db: 'metrics',
+    db: 'statistics',
     port: process.env.MONGO_PORT || 27017,
     username: process.env.MONGO_USER,
     password: process.env.MONGO_PSW,
     collections: {
-      metric: {
+      statistics: {
         index: [{ id: 1, date: 1 }, { unique: true }],
         timeseries: true
       },
@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   apis: {
-    metrics: '/metrics',
+    statistics: '/statistics',
     updateDb: '/update-db'
   },
   port: process.env.PORT || '5000',

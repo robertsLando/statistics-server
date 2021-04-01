@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb')
 const { db: options } = require('../config/app')
 
-const defaultCollection = 'metric'
+const defaultCollection = 'statistics'
 const collections = options.collections
 
 // Connection URI
