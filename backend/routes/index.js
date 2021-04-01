@@ -1,17 +1,11 @@
 const express = require('express')
-const Joi = require('joi')
-const validator = require('express-joi-validation').createValidator({})
 
 const db = require('../db')
 const { ConfigManager } = require('@zwave-js/config')
 const { key } = require('../config/app')
+const validator = require('../config/validator')
 
 const router = express.Router()
-
-const bodySchema = Joi.object({
-  collection: Joi.string(),
-  data: Joi.array()
-})
 
 async function authMiddleware (req, res, next) {
   const token = req.headers['x-api-token']
@@ -32,7 +26,7 @@ async function authMiddleware (req, res, next) {
 }
 
 /* GET home page. */
-router.post('/metrics', authMiddleware, validator.body(bodySchema), async (req, res) => {
+router.post('/metrics', authMiddleware, ...validator('/metrics'), async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
