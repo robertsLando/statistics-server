@@ -7,15 +7,6 @@ const validator = require('express-joi-validation').createValidator({})
 // available validators here are for `body` `query` `params` `headers` `respone` `fields`
 // more info: https://www.npmjs.com/package/express-joi-validation#api
 
-// schemas is a dictionary of the form
-// {
-//   route1: {
-//     body: { // or one of the others
-//       // Joi schema
-//     }
-//   },
-//   // ... more routes
-// }
 /** @type {Record<string, Partial<Record<import("express-joi-validation").ContainerTypes, Joi.ObjectSchema>>>} */
 const schemas = {
   [APIs.statistics]: {
@@ -31,8 +22,21 @@ const schemas = {
             // ...have at least an "id" property
             id: Joi.string().required().min(1).max(100),
             // ... have no date property, because that is used internally
-            date: Joi.forbidden()
-            // define additional allowed properties here, or use `{ allowUnknown: true }` in the validation call
+            date: Joi.forbidden(),
+            driverVersion: Joi.string().required().max(100),
+            applicationName: Joi.string().required().max(100),
+            applicationVersion: Joi.string().required().max(100),
+            devices: Joi.array()
+              .required()
+              .max(255)
+              .items(
+                Joi.object({
+                  manufacturerId: Joi.string().required().regex(/^0x[0-9a-f]{4}$/).allow(''),
+                  productType: Joi.string().required().regex(/^0x[0-9a-f]{4}$/).allow(''),
+                  productId: Joi.string().required().regex(/^0x[0-9a-f]{4}$/).allow(''),
+                  firmwareVersion: Joi.string().required().regex(/^[0-9]{1,3}\.[0-9]{1,3}$/).allow('')
+                })
+              )
           })
         )
     })
