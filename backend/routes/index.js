@@ -2,7 +2,7 @@ const express = require('express')
 
 const db = require('../db')
 const { ConfigManager } = require('@zwave-js/config')
-const { key } = require('../config/app')
+const { key, apis: APIs } = require('../config/app')
 const validator = require('../config/validator')
 
 const router = express.Router()
@@ -18,15 +18,15 @@ async function authMiddleware (req, res, next) {
     if (token === key) {
       next()
     } else {
-      throw Error('Token not valid')
+      throw Error('Invalid API token')
     }
   } catch (error) {
-    res.status(error.message === 'Token not valid' ? 403 : 401).send(error.message)
+    res.status(error.message === 'Invalid API token' ? 403 : 401).send(error.message)
   }
 }
 
 /* GET home page. */
-router.post('/metrics', authMiddleware, ...validator('/metrics'), async (req, res) => {
+router.post(APIs.metrics, authMiddleware, ...validator(APIs.metrics), async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
@@ -36,7 +36,7 @@ router.post('/metrics', authMiddleware, ...validator('/metrics'), async (req, re
   }
 })
 
-router.post('/update-db', authMiddleware, async (req, res) => {
+router.post(APIs.updateDb, authMiddleware, async (req, res) => {
   try {
     const manager = new ConfigManager()
 

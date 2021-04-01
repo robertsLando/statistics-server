@@ -1,3 +1,5 @@
+const { apis: APIs } = require('../config/app')
+
 const Joi = require('joi')
 const validator = require('express-joi-validation').createValidator({})
 
@@ -5,7 +7,7 @@ const validator = require('express-joi-validation').createValidator({})
 // available validators here are for `body` `query` `params` `headers` `respone` `fields`
 // more info: https://www.npmjs.com/package/express-joi-validation#api
 const schemas = {
-  '/metrics': {
+  [APIs.metrics]: {
     body: Joi.object({
       collection: Joi.string(),
       data: Joi.array()

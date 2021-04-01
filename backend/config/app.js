@@ -19,6 +19,10 @@ module.exports = {
       }
     }
   },
+  apis: {
+    metrics: '/metrics',
+    updateDb: '/update-db'
+  },
   port: process.env.PORT || '5000',
   rateLimit: {
     maxRequests: parseInt(process.env.RATELIMIT) || 2, // mind that 1 request needs to be done for auth
