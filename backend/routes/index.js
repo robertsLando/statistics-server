@@ -14,16 +14,11 @@ const bodySchema = Joi.object({
 })
 
 async function authMiddleware (req, res, next) {
-  let token = req.headers['x-api-token']
-  if (token && token.startsWith('Bearer ')) {
-    // Remove Bearer from string
-    token = token.slice(7, token.length)
-  }
-
+  const token = req.headers['x-api-token']
   // third-party cookies must be allowed in order to work
   try {
     if (!token) {
-      throw Error('Invalid token header')
+      throw Error('Missing API token')
     }
 
     if (token === key) {
