@@ -6,5 +6,6 @@
         "javascript"
     ],
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "standard.enable": false
+    "standard.enable": false,
+    "js/ts.implicitProjectConfig.checkJs": true
 }
