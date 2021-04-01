@@ -47,7 +47,7 @@ docker exec -it \
 
 ## Backend
 
-Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name and the collections with their unique fields. Unique fields are necessary to identify a document uniquely in the DB. This can be done [here](backend/config/app.js)
+Uses an Express server to provide apis to store metrics to MongoDB. The only thing that needs to be configured are the database name, the collections with their unique fields and (optionally) your apis validators. Unique fields are necessary to identify a document uniquely in the DB, validators are required to validate body, headers, query of api requests. This can be done [here](backend/config)
 
 ### APIs
 
