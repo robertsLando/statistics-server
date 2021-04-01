@@ -28,5 +28,5 @@ module.exports = {
     maxRequests: parseInt(process.env.RATELIMIT) || 2, // mind that 1 request needs to be done for auth
     ttl: 60 * 1000 // 1 minute
   },
-  key: process.env.KEY || '8F03DC2E86EFD74C2B092770A95B3062'
+  key: process.env.KEY
 }
