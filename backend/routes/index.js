@@ -3,7 +3,7 @@ const express = require('express')
 const db = require('../db')
 const { ConfigManager } = require('@zwave-js/config')
 const { key, apis: APIs } = require('../config/app')
-const validator = require('../config/validator')
+const createValidator = require('../config/validator')
 
 const router = express.Router()
 
@@ -26,7 +26,7 @@ async function authMiddleware (req, res, next) {
 }
 
 /* GET home page. */
-router.post(APIs.metrics, authMiddleware, ...validator(APIs.metrics), async (req, res) => {
+router.post(APIs.metrics, authMiddleware, ...createValidator(APIs.metrics), async (req, res) => {
   try {
     const result = await db.upsert(req.body)
     res.json({ success: true, result })
