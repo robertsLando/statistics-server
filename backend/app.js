@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const index = require('./routes/index')
 const RateLimit = require('express-rate-limit')
 const MongoStore = require('rate-limit-mongo')
+const helmet = require('helmet')
 
 const { db, rateLimit } = require('./config/app')
 
@@ -23,6 +24,8 @@ const limiter = new RateLimit({
 })
 
 const app = express()
+
+app.use(helmet())
 
 app.use(limiter)
 
