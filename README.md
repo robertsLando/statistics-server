@@ -10,7 +10,7 @@ Full stack that provides all the tools to store and visualize custom usage stati
 ## Install
 
 ```bash
-git clonehttps://github.com/robertsLando/statistics-server.git
+git clone https://github.com/robertsLando/statistics-server.git
 cd statistics-server
 docker-compose up
 ```
