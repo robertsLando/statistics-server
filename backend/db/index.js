@@ -51,7 +51,11 @@ module.exports = {
     const db = client.db(options.db)
     for (const c in collections) {
       const collection = await db.collection(c)
-      await collection.createIndex(...collections[c].index)
+      try {
+        await collection.createIndex(...collections[c].index)
+      } catch (e) {
+        console.error(`ERROR: ${e.message}`)
+      }
     }
     console.log('MongoDB client connected successfully to server')
   },

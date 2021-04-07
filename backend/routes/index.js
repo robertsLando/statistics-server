@@ -55,7 +55,7 @@ router.post(APIs.updateDb, authMiddleware, async (req, res) => {
       })
 
       products.set(`${device.manufacturerId}-${device.productType}-${device.productId}`, {
-        manufacturer: device.manufacturerId,
+        manufacturerId: device.manufacturerId,
         productType: device.productType,
         productId: device.productId,
         label: device.label,
