@@ -69,9 +69,3 @@ Used to add statistics to the db. The individual docs are added using `upsert`, 
 ```
 
 If no collection name is provided the default collection will be used: `statistics`. The default collection has a unique field named `id` that the user can use to uniquely identify an entry in the collection
-
-#### POST `/update-db`
-
-**Requires AUTH**
-
-Used in this specific case to update some db collections. No payload is needed

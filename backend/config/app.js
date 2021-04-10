@@ -7,26 +7,28 @@ module.exports = {
     password: process.env.MONGO_PSW,
     collections: {
       statistics: {
+        // Define which properties should be indexed
         index: [{ id: 1, date: 1 }, { unique: true }],
+        // Define this collection as a time series. This means that a `date` and a `ts`
+        // property get added automatically
         timeseries: true
-      },
-      // add below custom collections if any
-      manufacturer: {
-        index: [{ hex: 1 }, { unique: true }]
-      },
-      product: {
-        index: [{ hex: 1, manufacturer: 1 }, { unique: true }]
       }
+      // add custom collections below if you need any
+      // product: {
+      //   index: [{ manufacturerId: 1, productType: 1, productId: 1 }, { unique: true }]
+      // }
     }
   },
   apis: {
-    statistics: '/statistics',
-    updateDb: '/update-db'
+    // Default API endpoint
+    statistics: '/statistics'
+    // Define custom endpoints below if you need any. Implementation goes into routes/index.js
+    // updateDb: '/update-db'
   },
   port: process.env.PORT || '5000',
   rateLimit: {
-    maxRequests: parseInt(process.env.RATELIMIT) || 2, // mind that 1 request needs to be done for auth
+    maxRequests: parseInt(process.env.RATELIMIT) || 2,
     ttl: 60 * 1000 // 1 minute
   },
-  key: process.env.KEY || '8F03DC2E86EFD74C2B092770A95B3062'
+  key: process.env.KEY
 }

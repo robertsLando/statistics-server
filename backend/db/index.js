@@ -25,6 +25,9 @@ module.exports = {
       if (collections[collection].timeseries) {
         // If the collection should be a time series, add the current date
         const now = new Date()
+        doc.ts = new Date(Date.UTC(
+          now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()
+        ))
         doc.date = new Date(Date.UTC(
           now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()
         ))
@@ -48,7 +51,11 @@ module.exports = {
     const db = client.db(options.db)
     for (const c in collections) {
       const collection = await db.collection(c)
-      await collection.createIndex(...collections[c].index)
+      try {
+        await collection.createIndex(...collections[c].index)
+      } catch (e) {
+        console.error(`ERROR: ${e.message}`)
+      }
     }
     console.log('MongoDB client connected successfully to server')
   },
