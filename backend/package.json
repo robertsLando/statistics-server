@@ -8,7 +8,6 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@zwave-js/config": "^7.0.0-beta.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "express": "~4.15.5",
