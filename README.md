@@ -49,6 +49,36 @@ docker exec -it \
 
 When behind a reverse proxy, you have to enable the `proxy` option in `config/app.js`. Make sure that your reverse proxy is configured correctly, or the rate limiter can be circumvented. Details can be found at: http://expressjs.com/en/guide/behind-proxies.html
 
+## Statistics pipeline for "last 24 hours"
+
+By default, one statistics entry per ID and day is created. If your charts should operate on the most recent unique entries, you can add this pipeline to a new data source:
+```jsonc
+[
+  // Select only the last 24 hours of reports
+  {
+    $addFields: {
+      ts: { $ifNull: ["$ts", "$date"] }
+    }
+  },
+  {
+    "$match": {
+      "ts": { $gt: new Date(Date.now() - 24*60*60 * 1000) }
+    }
+  },
+  // And make sure there are no duplicate records (keep last)
+  {$sort: {ts: 1}},
+  {
+    $group: {
+      _id: "$id",
+      fields: {$last: "$$ROOT"}
+    }
+  },
+  {$replaceRoot: { newRoot: "$fields"}},
+
+  // If you want to clean up the data afterwards, you can do that here with $addFields, $set, etc.
+]
+```
+
 ## Backend
 
 Uses an Express server to provide apis to store statistics to MongoDB. The only thing that needs to be configured are the database name, the collections with their unique fields and (optionally) your apis validators. Unique fields are necessary to identify a document uniquely in the DB, validators are required to validate body, headers, query of api requests. This can be done [here](backend/config)
