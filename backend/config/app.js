@@ -36,6 +36,6 @@ module.exports = {
   //   proxy_set_header X-Forwarded-For $remote_addr
   //   proxy_set_header X-Forwarded-Host ""
   //   proxy_set_header X-Forwarded-Proto ""
-  proxy: false,
+  proxy: !!process.env.PROXY,
   key: process.env.KEY
 }
